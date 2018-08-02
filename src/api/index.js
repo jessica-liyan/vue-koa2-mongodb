@@ -46,8 +46,8 @@ export function login(data){
   return postData(`${base}/login`, data)
 }
 
-export function logout(){
-  return getData(`${base}/logout`)
+export function logout(token){
+  return getDataWithToken(`${base}/logout`, token)
 }
 
 export function fetchCaptcha(){
@@ -155,12 +155,22 @@ export function unfollowUser(followeeId, followerId, token){
   return getDataWithToken(`${base}/unfollow?followeeId=${followeeId}&followerId=${followerId}`, token)
 }
 
+// 是否关注
+export function isFollowedUser(followeeId, followerId, token){
+  return getDataWithToken(`${base}/isfollowed?followeeId=${followeeId}&followerId=${followerId}`, token)
+}
+
 // 用户关注列表
 export function getFolloweeList(id, token){
-  return getDataWithToken(`${base}/followeeList?id=${id}`, token)
+  return getDataWithToken(`${base}/followeeList/${id}`, token)
 }
 
 // 用户粉丝列表
 export function getFollowerList(id, token){
-  return getDataWithToken(`${base}/followerList?id=${id}`, token)
+  return getDataWithToken(`${base}/followerList/${id}`, token)
+}
+
+// 用户消息列表
+export function getNotification(id, token){
+  return getDataWithToken(`${base}/notification/${id}`, token)
 }

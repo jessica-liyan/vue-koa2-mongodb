@@ -11,6 +11,9 @@ a{
   text-decoration:none;
   color:inherit;
 }
+em,i{
+  font-style:normal;
+}
 img{
   border:0;
   vertical-align:middle;
@@ -76,6 +79,9 @@ input:focus{
 .fs-12{
   font-size:12px;
 }
+.c-f{
+  color:#fff;
+}
 .c-3{
   color:#333;
 }
@@ -99,6 +105,9 @@ input:focus{
 }
 .mb-10{
   margin-bottom:10px;
+}
+.mt-10{
+  margin-top:10px;
 }
 .ml-10{
   margin-left:10px;
@@ -240,6 +249,11 @@ input:focus{
   overflow: hidden;
   text-align:center;
   margin-right:20px;
+  &.small{
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+  }
   img{
     width:100%;
   }

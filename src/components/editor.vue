@@ -148,7 +148,7 @@ export default {
           type: 'success',
           showClose: true
         })
-        this.$router.push(`/info/post/${res.data.data._id}`)
+        this.$router.push(`/info/post/${this.$route.params.id}`)
       })
     }
   }

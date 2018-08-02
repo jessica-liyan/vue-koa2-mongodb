@@ -1,8 +1,8 @@
 <template>
   <div class="article">
-    <div v-if="Object.keys(article).length">
+    <div v-if="article && Object.keys(this.article).length">
       <h2 class="article-tit">{{article.title}}</h2>
-      <div class="article-tips">
+      <div class="article-tips" v-if="Object.keys(article.author).length">
         <a :href="`#/info/user/${article.author._id}`" target="_blank"><i class="round" v-if="article.author.avatar"><img :src="`${base}/${article.author.avatar}`" alt=""></i></a>
         <div class="ib v-m">
           <p class="fs-16 c-3 mb-5">
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import {base, deleteArticle, fetchSelf, likeArticle, dislikeArticle, getMyLike, followUser, unfollowUser, getFolloweeList} from '../api/index.js'
+import {base, deleteArticle, fetchSelf, likeArticle, dislikeArticle, getMyLike, followUser, unfollowUser, isFollowedUser} from '../api/index.js'
 import {mapState, mapMutations} from 'vuex'
 import Comment from './comment'
 
@@ -54,8 +54,9 @@ export default {
     return {
       isMyArticle: false,
       token: '',
+      id: '',
       base,
-      isLiked: false,  //初始加载的时候判断是否已经被喜欢
+      isLiked: false,  // 初始加载的时候判断是否已经被喜欢
       isFollowed: false 
     }
   },
@@ -68,42 +69,42 @@ export default {
     }),
   },
   created () {
-    this.getArticleDetail(this.$route.params.id)
     this.id = this.$storage.get('userId')
     this.token = this.$storage.get('token')
-    if(this.token){
-      // 获取用户信息
-      fetchSelf(this.token).then(res => {
-        // 判断是否作者本人
-        if(this.article.author._id === this.id){
-          this.isMyArticle = true
-        }
-        // 判断这篇文章是否是用户喜欢列表中的
-        getMyLike(this.id, this.token).then(res => {
-          console.log(res)
-          let index = res.data.data.findIndex(x => x.entry.uid === this.article._id)
-          if(index !== -1) {
-            this.isLiked = true
-          }
-        })
-        // 判断这篇文章的作者是否关注过
-        getFolloweeList(this.id, this.token).then(res => {
-          console.log(res)
-          let idx = res.data.data.findIndex(x => x.followeeId === this.article.author._id)
-          if(idx !== -1) {
-            this.isFollowed = true
-          }
-        })
-      })
+    this.getArticleDetail(this.$route.params.id)
+
+    // 在article对象生成之后，再做下面的判断
+    if(this.article && Object.keys(this.article).length){
+      this.judge()
     }
   },
   methods: {
     ...mapMutations({
       getArticleDetail: 'getArticleDetail'
     }),
+    judge () {
+      getMyLike(this.id, this.token).then(res => {
+        let index = res.data.data.findIndex(x => x.entry.uid === this.article._id)
+        if(index !== -1) {
+          this.isLiked = true
+        }
+      })
+      // 判断是否作者本人
+      if(this.article.author._id === this.id){
+        this.isMyArticle = true
+      } else {
+        this.isMyArticle = false
+      }
+      // 如果作者非本人，判断这篇文章的作者是否关注过
+      if(!this.isMyArticle){
+        isFollowedUser(this.article.author._id, this.id, this.token).then(res => {
+          this.isFollowed = res.data.data.isFollowed
+        })
+      }
+    },
     del () {
       if(confirm('删除文章后不可恢复，确定删除吗？')){
-        deleteArticle(this.$route.params.id).then(res => {
+        deleteArticle(this.$route.params.id, this.token).then(res => {
           console.log(res)
           if (res.data.status === 0) {
             this.$message({
@@ -128,14 +129,12 @@ export default {
         classes.add('active')
         likeArticle(this.article._id, this.token).then(res => {
           console.log(res)
-          //this.article = res.data
           this.getArticleDetail(this.article._id)
         })
       } else {
         classes.remove('active')
         dislikeArticle(this.article._id, this.token).then(res => {
           console.log(res)
-          //this.article = res.data
           this.getArticleDetail(this.article._id)
         })
       }
@@ -151,6 +150,12 @@ export default {
       unfollowUser(id, this.id, this.token).then(res => {
         console.log(res)
       })
+    }
+  },
+  watch: {
+    article (val) { // article变化，需要重新判断一遍
+      console.log('变化了', val.author._id)
+      this.judge()
     }
   }
 }

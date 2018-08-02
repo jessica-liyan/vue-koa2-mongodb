@@ -96,7 +96,7 @@ export default {
   created () {
     this.id = this.$storage.get('userId')
     this.token = this.$storage.get('token')
-    this.getUser(this.id, this.token) // 登录用户的信息
+    this.getUser({id: this.id, token: this.token}) // 登录用户的信息
   },
   computed: {
     ...mapState(['user']),

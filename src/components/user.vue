@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import {fetchUser, base, fetchSelf, getFolloweeList, follow, unfollow} from '../api/index.js'
+import {fetchUser, base, fetchSelf, isFollowedUser, followUser, unfollowUser} from '../api/index.js'
 
 export default {
   name: 'user',
@@ -60,16 +60,16 @@ export default {
     // 判断是否登录本人
     if (this.$route.params.id === this.id) { 
       this.isMine = true
+    } else {
+      this.isMine = false
+    }
+    // 如果作者非本人，判断这篇文章的作者是否关注过
+    if(!this.isMine){
+      isFollowedUser(this.$route.params.id, this.id, this.token).then(res => {
+        this.isFollowed = res.data.data.isFollowed
+      })
     }
     this.fetch(this.$route.params.id)
-    // 判断该用户是否关注过
-    getFolloweeList(this.id, this.token).then(res => {
-      console.log(res)
-      let idx = res.data.data.findIndex(x => x.followeeId === this.$route.params.id)
-      if(idx !== -1) {
-        this.isFollowed = true
-      }
-    })
   },
   methods: {
     showFollowees () {
@@ -91,12 +91,14 @@ export default {
       this.isFollowed = true
       followUser(id, this.id, this.token).then(res => {
         console.log(res)
+        this.fetch(id)
       })
     },
     unfollow (id) {
       this.isFollowed = false
       unfollowUser(id, this.id, this.token).then(res => {
         console.log(res)
+        this.fetch(id)
       })
     }
   },

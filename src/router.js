@@ -14,6 +14,7 @@ import UserLikes from './components/user-likes.vue'
 import UserFollowees from './components/user-followees.vue'
 import UserFollowers from './components/user-followers.vue'
 import Profile from './components/profile.vue'
+import Notification from './components/notification.vue'
 
 const routes = [
   { 
@@ -74,6 +75,9 @@ const routes = [
     }, {
       path: 'editor/:id',
       component: Editor,
+    }, {
+      path: 'notification',
+      component: Notification,
     }]
   },
 ]

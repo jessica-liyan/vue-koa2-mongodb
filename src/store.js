@@ -7,12 +7,14 @@ Vue.use(vuex)
 export default new vuex.Store({
   state:{
     comments: [],
-    article: {},
-    user: {}, // 登录用户的个人信息
+    article: null,
+    user: {
+      _id: ''
+    }, // 登录用户的个人信息
   },
   mutations: {
-    getUser (state, id, token) {
-      fetchUser(id, token).then(res => {
+    getUser (state, params) {
+      fetchUser(params.id, params.token).then(res => {
         state.user = res.data.data
       })
     },

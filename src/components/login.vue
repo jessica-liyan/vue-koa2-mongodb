@@ -29,6 +29,12 @@ export default {
       key: '' // 验证码key
     }
   },
+  created () {
+    this.token = this.$storage.get('token')
+    if(this.token){ // 表示登录过
+      this.$router.push('/info')
+    }
+  },
   methods: {
     submit () {
       login(this.user).then(res => {
