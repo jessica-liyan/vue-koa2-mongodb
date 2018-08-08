@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
+import VueSocketio from 'vue-socket.io';
+import socketio from 'socket.io-client'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import VueRouter from 'vue-router'
@@ -17,6 +19,7 @@ Vue.use(VueLocalStorage, {
   bind: true
 })
 Vue.use(mavonEditor)
+Vue.use(VueSocketio, socketio('http://192.168.4.76:4000'), store);
 
 new Vue({
   router,

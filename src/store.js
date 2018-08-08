@@ -1,4 +1,4 @@
-import {getCommentList, getArticleDetail, fetchSelf, fetchUser} from './api/index'
+import {getCommentList, getArticleDetail, fetchSelf, fetchUser, login} from './api/index'
 import Vue from 'vue'
 import vuex from 'vuex'
 
@@ -8,11 +8,16 @@ export default new vuex.Store({
   state:{
     comments: [],
     article: null,
-    user: {
-      _id: ''
-    }, // 登录用户的个人信息
+    user: {}, // 登录用户的个人信息
+    // isLogin: false
+  },
+  getters: {
+
   },
   mutations: {
+    // setLogin (state, params) {
+    //   state.isLogin = params
+    // },
     getUser (state, params) {
       fetchUser(params.id, params.token).then(res => {
         state.user = res.data.data
@@ -28,6 +33,11 @@ export default new vuex.Store({
         state.article = res.data.data
       })
     }
+  },
+  actions: {
+    // loginAction ({commit}) {
+    //   commit('setLogin', true)
+    // }
   }
 })
 

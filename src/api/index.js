@@ -140,9 +140,14 @@ export function getArticle(page, limit){
   return getData(`${base}/article?page=${page}&limit=${limit}`)
 }
 
+// 文章分类列表
+export function getSubArticle(type, page, limit){
+  return getData(`${base}/article/${type}?page=${page}&limit=${limit}`)
+}
+
 // 文章详情
 export function getArticleDetail(id){
-  return getData(`${base}/article/${id}`)
+  return getData(`${base}/article/detail/${id}`)
 }
 
 // 用户添加关注
@@ -173,4 +178,24 @@ export function getFollowerList(id, token){
 // 用户消息列表
 export function getNotification(id, token){
   return getDataWithToken(`${base}/notification/${id}`, token)
+}
+
+// 未读消息个数
+export function getNotificationNum(id, token){
+  return getDataWithToken(`${base}/getNotificationNum/${id}`, token)
+}
+
+// 发送消息
+export function sendMessage(data, token){
+  return postDataWithToken(`${base}/message`, data, token)
+}
+
+// 历史消息
+export function getMessageList(data, token){
+  return postDataWithToken(`${base}/message/list`, data, token)
+}
+
+// 当前用户的聊天好友列表
+export function getMessageFriends(id, token){
+  return getDataWithToken(`${base}/message/${id}`, token)
 }

@@ -22,7 +22,7 @@
       <el-form-item label="添加封面">
         <el-upload
           class="avatar-uploader"
-          action="http://192.168.4.76:4000/upload"
+          :action="base + '/upload'"
           :show-file-list="false"
           :on-success="handleSuccess"
           >
@@ -45,7 +45,7 @@ export default {
       form: {
         title: '',
         content: '',
-        authorId: '', // 存作者的id
+        author: '', // 存作者的id
         classify: {},
         cover: ''
       },
@@ -56,10 +56,10 @@ export default {
         title: 'frontend'
       }, {
         name: 'Android',
-        title: 'Android'
+        title: 'android'
       }, {
         name: 'IOS',
-        title: 'IOS'
+        title: 'ios'
       }, {
         name: '后端',
         title: 'backend'
@@ -72,7 +72,7 @@ export default {
   created () {
     this.id = this.$storage.get('userId')
     this.token = this.$storage.get('token')
-    this.form.authorId = this.id
+    this.form.author = this.id
     // 存在路由参数的情况
     if(this.$route.params.id){
       this.isUpdate = true

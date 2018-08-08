@@ -29,12 +29,6 @@ export default {
       key: '' // 验证码key
     }
   },
-  created () {
-    this.token = this.$storage.get('token')
-    if(this.token){ // 表示登录过
-      this.$router.push('/info')
-    }
-  },
   methods: {
     submit () {
       login(this.user).then(res => {
@@ -51,12 +45,13 @@ export default {
             type: 'success',
             showClose: true
           })
-          this.$router.push('/info')
+          console.log(this.$storage)
+          // localStorage.setItem('token', res.data.token)
+          // localStorage.setItem('userId', res.data.data._id)
           this.$storage.set('token', res.data.token) // 将token存入缓存
           this.$storage.set('userId', res.data.data._id) // 将userId存入缓存
+          this.$router.push('/info')
         }
-      }).catch(err => {
-        console.log('err', err.response)
       })
     },
     register () {

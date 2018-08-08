@@ -1,6 +1,12 @@
 <template>
   <div>
-    <h2 class="title">文章列表</h2>
+    <el-tabs v-model="type" @tab-click="handleTypeChange">
+      <el-tab-pane label="全部" name="all"></el-tab-pane>
+      <el-tab-pane label="前端" name="frontend"></el-tab-pane>
+      <el-tab-pane label="android" name="android"></el-tab-pane>
+      <el-tab-pane label="ios" name="ios"></el-tab-pane>
+      <el-tab-pane label="后端" name="backend"></el-tab-pane>
+    </el-tabs>
     <ul class="list" v-if="list.length">
       <li v-for="(item, index) of list">
         <div class="wrap">
@@ -19,6 +25,10 @@
         </div>
       </li>
     </ul>
+    <div v-else class="null">
+      <img src="../assets/blank.png" alt="">
+      <p>暂无文章哦</p>
+    </div>
     <el-pagination
       layout="prev, pager, next"
       :total="total"
@@ -31,15 +41,16 @@
 </template>
 
 <script>
-import {base, getArticle} from '../api/index.js'
+import {base, getArticle, getSubArticle} from '../api/index.js'
 
 export default {
   name: 'post',
   data () {
     return {
       list: [],
+      type: 'all',
       total: 0,
-      size: 10,
+      size: 2,
       base,
       currentPage: 1
     }
@@ -49,13 +60,24 @@ export default {
   },
   methods: {
     fetch () {
-      getArticle(this.currentPage, this.size).then(res => {
-        this.list = res.data.data
-        this.total = res.data.total
-      })
+      if(this.type === 'all') {
+        getArticle(this.currentPage, this.size).then(res => {
+          this.list = res.data.data
+          this.total = res.data.total
+        })
+      } else {
+        getSubArticle(this.type, this.currentPage, this.size).then(res => {
+          this.list = res.data.data
+          this.total = res.data.total
+        })
+      }
     },
     handleCurrentChange (val) {
       console.log('当前页', val)
+      this.fetch()
+    },
+    handleTypeChange (tab, event) {
+      console.log('当前类别', tab, event, this.type)
       this.fetch()
     }
   }

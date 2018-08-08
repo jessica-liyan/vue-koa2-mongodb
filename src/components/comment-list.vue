@@ -3,9 +3,9 @@
     <ul class="comment" v-if="comments.length">
       <li v-for="(item, index) of comments">
         <div class="comment-info">
-          <a :href="`#/info/user/${item.userInfo._id}`" target="_blank"><span class="round"><img :src="base + '/' + item.userInfo.avatar" alt=""></span></a>
+          <a :href="`#/info/user/${item.user._id}`" target="_blank"><span class="round"><img :src="base + '/' + item.user.avatar" alt=""></span></a>
           <div style="flex:1;">
-            <a :href="`#/info/user/${item.userInfo._id}`"  class="fs-16 c-3" target="_blank">{{item.userInfo.name}}</a>
+            <a :href="`#/info/user/${item.user._id}`"  class="fs-16 c-3" target="_blank">{{item.user.name}}</a>
             <p class="fs-14 c-6">{{item.content}}</p>
             <div>
               <span class="v-m mr-10 fs-12">{{new Date(item.created_at).toLocaleString()}}</span>
@@ -19,13 +19,13 @@
                 <ul v-if="item.children.length">
                   <li v-for="(child, idx) of item.children">
                     <div class="comment-info">
-                      <a :href="`#/info/user/${child.userInfo._id}`" target="_blank"><span class="round"><img :src="base + '/' + child.userInfo.avatar" alt=""></span></a>
+                      <a :href="`#/info/user/${child.user._id}`" target="_blank"><span class="round"><img :src="base + '/' + child.user.avatar" alt=""></span></a>
                       <div style="flex:1;">
-                        <a :href="`#/info/user/${child.userInfo._id}`" target="_blank"><span class="c-blue">{{child.userInfo.name}}:</span></a>
+                        <a :href="`#/info/user/${child.user._id}`" target="_blank"><span class="c-blue">{{child.user.name}}:</span></a>
                         <span class="ml-10" v-html="child.content"></span></p>
                         <p>
                           <span class="v-m mr-10 fs-12">{{new Date(child.created_at).toLocaleString()}}</span>
-                          <a href="javascript:;" class="reply" v-on:click="showSubComment(index, child.userInfo)"><img src="../assets/comment.png" alt=""><span class="v-m">回复</span></a>
+                          <a href="javascript:;" class="reply" v-on:click="showSubComment(index, child.user)"><img src="../assets/comment.png" alt=""><span class="v-m">回复</span></a>
                         </p>
                       </div>
                     </div>

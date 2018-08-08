@@ -7,17 +7,21 @@
           <div v-if="item.type === 'update'">更新了文章</div>
           <div v-if="item.type === 'delete'">删除了文章</div>
           <div v-if="item.type === 'collection'">喜欢了文章</div>
+          <div v-if="item.type === 'comment'">评论了文章</div>
           <div v-if="item.type === 'follow'">关注了用户</div>
           <span class="fs-12">{{new Date(item.created_at).toLocaleString()}}</span>
         </div>
-        <div v-if="item.type === 'follow'">
-          <span class="round middle"><img :src="`${base}/${item.users[0].avatar}`" alt=""></span>
+        <div v-if="item.comment">
+          <p class="fs-14 c-3 mb-10">{{item.comment.content}}</p>
+        </div>
+        <div v-if="item.followee">
+          <span class="round middle"><img :src="`${base}/${item.followee.avatar}`" alt=""></span>
           <div class="ib v-m">
-            <p class="fs-16 c-3 mb-5">{{item.users[0].name}}</p>
-            <p class="fs-12 c-9">{{item.users[0].selfDesc}}</p>
+            <p class="fs-16 c-3 mb-5">{{item.followee.name}}</p>
+            <p class="fs-12 c-9">{{item.followee.selfDesc}}</p>
           </div>
         </div>
-        <div class="info" v-else>
+        <div class="info" v-if="item.entry">
           <router-link :to="{'path': `/info/post/${item.entry.uid}`}" class="link fs-14 c-3">{{item.entry.title}}</router-link>
         </div>
       </li>

@@ -20,8 +20,8 @@
           </p>
         </div>
       </div>
-      <div>
-        <img v-if="article.cover" :src="base + '/' + article.cover" class="avatar">
+      <div class="t-c">
+        <img v-if="article.cover" :src="base + '/' + article.cover" style="max-width:100%;">
       </div>
       <mavon-editor v-model="article.content"
         :boxShadow="false"

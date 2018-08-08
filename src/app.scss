@@ -134,6 +134,7 @@ input:focus{
   margin-bottom:20px;
   padding:0 20px 20px 20px;
   box-sizing:border-box;
+  position:relative;
 }
 
 .markdown-body{
@@ -149,7 +150,6 @@ input:focus{
     padding:0 20px;
     height:70px;
     line-height:70px;
-    margin:0 20px;
     font-size:16px;
     color:#fff;
     &.active{
@@ -193,6 +193,11 @@ input:focus{
 }
 
 .list{
+  &.line{
+    li{
+      border-bottom:1px dashed #dcdcdc;
+    }
+  }
   li{
     padding:10px 0;
     .wrap{
@@ -298,4 +303,8 @@ input:focus{
     color: #999;
     margin:15px 0;
   }
+}
+
+.el-tabs__nav-wrap::after{
+  height: 1px!important;
 }

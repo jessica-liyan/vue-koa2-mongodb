@@ -9,7 +9,7 @@
             <img v-if="user.avatar" :src="`${base}/${user.avatar}`">
           </div>
           <el-upload
-            action="http://192.168.4.76:4000/upload"
+            :action="base + '/upload'"
             :show-file-list="false"
             :on-success="handleSuccess"
             >

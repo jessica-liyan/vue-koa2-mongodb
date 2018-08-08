@@ -25,6 +25,9 @@
       <div v-else>
         <el-button type="success" icon="el-icon-plus" plain v-if="!isFollowed" @click="follow(user._id)">关注</el-button>
         <el-button type="success" icon="el-icon-check" v-if="isFollowed" @click="unfollow(user._id)">已关注</el-button>
+        <router-link :to="`/info/message?to=${user._id}`" class="ml-10">
+          <el-button type="success" icon="el-icon-message">聊天</el-button>
+        </router-link>
       </div>
     </div>
     <div class="tabs">
