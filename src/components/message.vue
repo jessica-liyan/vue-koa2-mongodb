@@ -23,7 +23,20 @@
             </ul>
             <div v-else class="t-c">
               <p class="fs-14 c-6 mb-10">暂无群组，创建一个吧~</p>
-              <el-button type="primary">创建群</el-button>
+              <el-button type="primary" @click="visible = true">创建群</el-button>
+              <el-dialog title="创建群组" :visible.sync="visible">
+                <el-form :model="group" label-width="100px">
+                  <el-form-item label="群组名称">
+                    <el-input v-model="group.name" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="群组头像">
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="visible = false">取 消</el-button>
+                  <el-button type="primary" @click="visible = true;createGroup()">确 定</el-button>
+                </div>
+              </el-dialog>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -63,11 +76,15 @@ export default {
       friends: [],
       groups: [],
       messages: [],
+      group: {
+        name: '',
+      },
       content: '',
       to: '',
       toname: '',
       id: '',
-      type: 'text'  // 聊天类型  text/group
+      type: 'text',  // 聊天类型  text/group
+      visible: false
     }
   },
   sockets:{
@@ -148,6 +165,10 @@ export default {
     // 标签页改变
     handleTypeChange () {
       this.getList()
+    },
+    // 创建群
+    createGroup () {
+
     },
     // 服务器获取消息推送
     send () {
