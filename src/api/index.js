@@ -68,6 +68,11 @@ export function fetchUser(id, token){
   return getDataWithToken(`${base}/user/${id}`, token)
 }
 
+// 用户列表
+export function fetchUserList(id){
+  return getData(`${base}/user/list`)
+}
+
 // 更新用户资料
 export function updateUser(data, token){
   return postDataWithToken(`${base}/user/update`, data, token)
@@ -185,11 +190,6 @@ export function getNotificationNum(id, token){
   return getDataWithToken(`${base}/getNotificationNum/${id}`, token)
 }
 
-// 发送消息
-export function sendMessage(data, token){
-  return postDataWithToken(`${base}/message`, data, token)
-}
-
 // 历史消息
 export function getMessageList(data, token){
   return postDataWithToken(`${base}/message/list`, data, token)
@@ -198,4 +198,9 @@ export function getMessageList(data, token){
 // 当前用户的聊天好友列表
 export function getMessageFriends(id, token){
   return getDataWithToken(`${base}/message/${id}`, token)
+}
+
+// 群组列表
+export function getGroupList(token){
+  return getDataWithToken(`${base}/group`, token)
 }

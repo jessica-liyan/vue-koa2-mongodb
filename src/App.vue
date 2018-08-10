@@ -13,10 +13,6 @@ export default {
     axios.get('http://localhost:4000').then(res => {
       console.log(res)
     })
-    this.token = this.$storage.get('token')
-    
-  },
-  components: {
   }
 }
 </script>

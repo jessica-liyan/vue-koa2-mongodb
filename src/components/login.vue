@@ -45,9 +45,11 @@ export default {
             type: 'success',
             showClose: true
           })
-          console.log(this.$storage)
-          // localStorage.setItem('token', res.data.token)
-          // localStorage.setItem('userId', res.data.data._id)
+          console.log(this.$socket)
+
+          // 更新用户对应的socketId
+          this.$socket.emit('updateUserSocket', res.data.data._id)
+          
           this.$storage.set('token', res.data.token) // 将token存入缓存
           this.$storage.set('userId', res.data.data._id) // 将userId存入缓存
           this.$router.push('/info')

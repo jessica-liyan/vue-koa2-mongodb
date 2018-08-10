@@ -89,6 +89,9 @@ const router = new VueRouter({
       }, {
         path: 'message',
         component: Message,
+      }, {
+        path: 'message/:id',
+        component: Message,
       }]
     }
   ]

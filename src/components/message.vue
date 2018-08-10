@@ -1,64 +1,101 @@
 <template>
   <div>
     <h2 class="title">聊天</h2>
-    <div class="chat-top fs-16 c-3 t-c">与{{toname}}的对话</div>
-    <ul class="chat-list">
-      <li :class="{'chat-right': item.from._id === id}"
-        v-for="(item, index) of list">
-        <a href="#" class="round" v-if="item.from.avatar"><img :src="`${base}/${item.from.avatar}`" alt=""></a>
-        <div class="chat-info">
-          <span>{{item.content}}</span>
+    <el-row class="chat">
+      <el-col :span="6">
+        <el-tabs v-model="type" @tab-click="handleTypeChange">
+          <el-tab-pane label="好友" name="text">
+            <ul class="list" v-if="friends.length">
+              <li v-for="(item, index) of friends" @click="openChat(item)" :class="{'active': to === item._id}">
+                <a href="#" class="round" v-if="item.avatar"><img :src="`${base}/${item.avatar}`" alt=""></a>
+                <span class="fs-14 c-3">{{item.name}}</span>
+                <span class="tag" v-if="item.unread">{{item.unread}}</span>
+              </li>
+            </ul>
+          </el-tab-pane>
+          <el-tab-pane label="群组" name="group">
+            <ul class="list" v-if="groups.length">
+              <li v-for="(item, index) of groups" @click="openChat(item)" :class="{'active': to === item._id}">
+                <a href="#" class="round" v-if="item.avatar"><img :src="`${base}/${item.avatar}`" alt=""></a>
+                <span class="fs-14 c-3">{{item.name}}</span>
+                <span class="tag" v-if="item.unread">{{item.unread}}</span>
+              </li>
+            </ul>
+            <div v-else class="t-c">
+              <p class="fs-14 c-6 mb-10">暂无群组，创建一个吧~</p>
+              <el-button type="primary">创建群</el-button>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-col>
+      <el-col :span="18">
+        <div class="chat-top fs-16 c-3 t-l">{{toname}}</div>
+        <ul class="chat-list" ref="content">
+          <li :class="{'chat-right': item.from._id === id}"
+            v-for="(item, index) of messages">
+            <a href="#" class="round" v-if="item.from.avatar"><img :src="`${base}/${item.from.avatar}`" alt=""></a>
+            <div class="chat-info">
+              <span>{{item.content}}</span>
+            </div>
+          </li>
+        </ul>
+        <div class="chat-bottom">
+          <textarea rows="2" class="textarea" v-model="content"></textarea>
+          <div class="t-r">
+            <el-button type="primary" @click="send" round>发送</el-button>
+          </div>
         </div>
-      </li>
-    </ul>
-    <div class="chat-bottom">
-      <textarea rows="2" class="textarea" v-model="content"></textarea>
-      <div class="t-r">
-        <el-button type="primary" @click="send" round>发送</el-button>
-      </div>
-    </div>
+      </el-col>
+    </el-row>
+    
   </div>
 </template>
 
 <script>
-import {base, sendMessage, fetchUser, getMessageList, getMessageFriends} from '../api/index.js'
+import {base, sendMessage, fetchUser, getMessageList, getMessageFriends, fetchUserList, getGroupList} from '../api/index.js'
+import {mapState} from 'vuex'
 
 export default {
   name: 'message',
   data () {
     return {
       base,
-      list: [],
+      friends: [],
+      groups: [],
+      messages: [],
       content: '',
       to: '',
       toname: '',
       id: '',
-      newid: ''
+      type: 'text'  // 聊天类型  text/group
     }
   },
   sockets:{
     connect: function(){
       console.log('socket', this.$socket)
-      this.newid = this.$socket.id
+      this.$socket.emit('join', this.user)
     },
     // 服务端推送对方数据
-    getNewMessage: function (val) {
-      console.log('新的聊天数据', val)
-      this.list.push({
-        to: {_id: this.id},
-        from: {_id: this.to},
-        content: val
-      })
+    getNewMessage: function (item) {
+      console.log('新的聊天数据', item) 
+      // 判断是不是当前聊天的好友
+      if(item.from._id === this.to){
+        this.messages.push(item)
+      } else {
+        let fromUser = this.friends.find(x => x._id === item.from._id)
+        if(fromUser){
+          fromUser.unread = fromUser.unread + 1
+        }
+      }
     }
-  },
-  mounted(){
   },
   created () { 
     this.id = this.$storage.get('userId')
     this.token = this.$storage.get('token')
 
-    this.to = this.$route.query.to // 接收id
-    
+    this.to = this.$route.params.id // 刷新页面，获取路由id
+
+    // 路由
     if(this.to){
       fetchUser(this.to, this.token).then(res => {
         this.toname = res.data.data.name
@@ -66,54 +103,111 @@ export default {
       this.updateList()
     }
 
-    // 获取当前用户的聊天好友列表
-    getMessageFriends(this.id, this.token).then(res => {
-      console.log('res')
-    })
+    // 获取好友/群组列表
+    this.getList()
+  },
+  computed: {
+    ...mapState(['user'])
   },
   methods: {
+    // 好友/群组列表
+    getList () {
+      if(this.type === 'text'){
+        fetchUserList().then(res => {
+          let friends = res.data.data
+          friends.splice(friends.findIndex(x => x._id === this.id), 1)
+          friends.map((fri) => {
+            fri.unread = 0
+          })
+          this.friends = friends
+        })
+      } else {
+        getGroupList(this.token).then(res => {
+          this.groups = res.data.data
+          console.log('群组', this.groups)
+        })
+      }
+    },
+    // 聊天记录
     updateList () {
-      // 历史聊天记录
       getMessageList({
         to: this.to,
         from: this.id
       }, this.token).then(res => {
         console.log(res)
-        this.list = res.data.data
+        this.messages = res.data.data
       })
     },
+    // 打开聊天窗口
+    openChat (item) {
+      this.to = item._id
+      this.toname = item.name
+      this.$router.push(`/info/message/${item._id}`)
+      this.updateList()
+    },
+    // 标签页改变
+    handleTypeChange () {
+      this.getList()
+    },
+    // 服务器获取消息推送
     send () {
-      // 测试服务器事件触发
-      this.$socket.emit('chat', this.content)
-      sendMessage({
+      const messageData = {
         to: this.to,
         from: this.id,
         content: this.content,
         type: 'text'
-      }, this.token).then(res => {
-        console.log(res)
-        // 消息添加到列表中
-        this.list.push({
-          to: {_id: this.to},
-          from: {_id: this.id},
-          content: this.content
-        })
-        console.log(this.list)
+      }
+      this.$socket.emit('chat', messageData)
+      this.messages.push({
+        from: this.user,
+        content: this.content
+      })
+      this.content = ''
+    },
+    scrollToBottom () {
+      this.$nextTick(() => {
+        var content = this.$refs.content
+        content.scrollTop = content.scrollHeight
       })
     }
+  },
+  watch: {
+    'messages': 'scrollToBottom'
   }
 }
 </script>
 
 <style lang="scss">
+.chat{
+  border:1px solid #ccc;
+  border-top: 0;
+  .el-tabs__nav-wrap{
+    padding-left: 20px!important;
+  }
+  .list{
+    li{
+      padding:10px 20px;
+      &.active{
+        background: #F4F6F8;
+      }
+    }
+  }
+  .el-col:nth-child(2){
+    position:relative;
+    border-left:1px solid #ddd;
+  }
+}
 .chat-top{
   font-weight:bold;
-  padding:20px 0;
+  padding:0 20px;
+  height:40px;
+  line-height:40px;
+  font-weight:normal;
   border-bottom:1px solid #ddd;
 }
 .chat-list{
-  padding: 15px 0;
-  margin-bottom:120px;
+  padding: 15px 20px;
+  margin-bottom:160px;
   height: 600px;
   overflow: auto;
   li{

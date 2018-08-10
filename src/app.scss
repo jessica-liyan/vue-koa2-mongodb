@@ -308,3 +308,23 @@ input:focus{
 .el-tabs__nav-wrap::after{
   height: 1px!important;
 }
+
+::-webkit-scrollbar
+{
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track-piece
+{
+    background-color: transparent;
+}
+::-webkit-scrollbar-thumb:vertical
+{
+    height: 5px;
+    background-color: #DEDEDE;
+}
+::-webkit-scrollbar-thumb:horizontal
+{
+    width: 5px;
+    background-color: transparent;
+}

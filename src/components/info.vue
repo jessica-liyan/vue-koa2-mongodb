@@ -63,6 +63,8 @@ export default {
     if(this.token && this.user){
       this.isLogin = true
     }
+
+    this.$socket.emit('updateUserSocket', this.id)
   },
   computed: {
     ...mapState(['user']),
@@ -85,6 +87,7 @@ export default {
             showClose: true
           })
           this.$storage.set('token', '')
+          this.$storage.set('userId', '')
           this.$router.push('/login')
         }
       })
