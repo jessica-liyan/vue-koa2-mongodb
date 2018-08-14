@@ -204,3 +204,13 @@ export function getMessageFriends(id, token){
 export function getGroupList(token){
   return getDataWithToken(`${base}/group`, token)
 }
+
+// 添加群组
+export function createGroup(data, token){
+  return postDataWithToken(`${base}/group/add`, data, token)
+}
+
+// 群组信息
+export function getGroupInfo(id, token){
+  return getDataWithToken(`${base}/group/${id}`, token)
+}

@@ -115,6 +115,17 @@ input:focus{
 .lh-20{
   line-height:2;
 }
+.flex-v{
+  display:flex;
+  flex-direction:column;
+}
+.flex-h{
+  display:flex;
+  flex-direction:row;
+}
+.flex-1{
+  flex:1;
+}
 .middle:before{
   content:"";
   display: inline-block;
@@ -302,6 +313,17 @@ input:focus{
     font-size:14px;
     color: #999;
     margin:15px 0;
+  }
+}
+
+.member-list{
+  display:flex;
+  flex-direction:row;
+  align-items:top;
+  margin:20px 0;
+  li{
+    flex-basis:25%;
+    text-align:center;
   }
 }
 

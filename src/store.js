@@ -20,7 +20,6 @@ export default new vuex.Store({
     getUser (state, params) {
       fetchUser(params.id, params.token).then(res => {
         state.user = res.data.data
-        console.log('state 用户信息', state.user)
       })
     },
     getComments (state, id, token) {
