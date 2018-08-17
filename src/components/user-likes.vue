@@ -4,7 +4,7 @@
       <li v-for="(item, index) of likes">
         <div class="wrap fs-16 c-3">
           <router-link :to="{'path': `/info/post/${item.entry.uid}`}" class="link">{{item.entry.title}}</router-link>
-          <span class="fs-12 c-9">{{new Date(item.created_at).toLocaleString()}}</span>
+          <span class="fs-12 c-9">{{item.created_at | getDateTime()}}</span>
         </div>
       </li>
     </ul>

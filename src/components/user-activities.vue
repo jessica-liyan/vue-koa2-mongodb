@@ -9,7 +9,7 @@
           <div v-if="item.type === 'collection'">喜欢了文章</div>
           <div v-if="item.type === 'comment'">评论了文章</div>
           <div v-if="item.type === 'follow'">关注了用户</div>
-          <span class="fs-12">{{new Date(item.created_at).toLocaleString()}}</span>
+          <span class="fs-12">{{item.created_at | getDateTime()}}</span>
         </div>
         <div v-if="item.comment">
           <p class="fs-14 c-3 mb-10">{{item.comment.content}}</p>

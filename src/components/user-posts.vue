@@ -4,7 +4,7 @@
       <li v-for="(item, index) of posts">
         <div class="wrap fs-16 c-3">
           <router-link :to="{'path': `/info/post/${item._id}`}" class="link">{{item.title}}</router-link>
-          <span class="fs-12 c-9">{{new Date(item.created_at).toLocaleString()}}</span>
+          <span class="fs-12 c-9">{{item.created_at | getDateTime()}}</span>
         </div>
         <p class="fs-14 c-6 lh-20">{{item.content.substr(0,200) + '...'}}</p>
       </li>

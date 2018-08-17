@@ -12,7 +12,7 @@
           </span></div>
           <div>
             <p class="fs-16 c-3 mb-5">{{item.user.name}}</p>
-            <p class="fs-12 c-9">{{item.user.job}}  {{new Date(item.created_at).toLocaleString()}}</p>
+            <p class="fs-12 c-9">{{item.user.job}}  {{item.created_at | getDateTime()}}</p>
           </div>
         </div>
         <p v-if="item.comment" class="fs-14 c-3">{{item.comment.content}}</p>

@@ -16,7 +16,7 @@
             <p class="fs-12 c-9 mt-10">
               <span class="round small"><img :src="`${base}/${item.author.avatar}`" alt=""></span>
               <span class="mr-10">{{item.author.name}}</span>
-              <span class="mr-10">{{new Date(item.created_at).toLocaleString()}}</span>
+              <span class="mr-10">{{item.created_at | getDateTime()}}</span>
               <span class="mr-10">阅读 {{item.viewsCount}}</span>
               <span class="mr-10">评论 {{item.commentsCount}}</span>
               <span>喜欢 {{item.collectionCount}}</span>

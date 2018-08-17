@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex-v h">
     <div class="header">
       <router-link to="/info/home">首页</router-link>
       <router-link to="/info/post">文章</router-link>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="main mid">
+    <div class="main">
       <router-view></router-view>
     </div>
   </div>
@@ -97,17 +97,4 @@ export default {
 </script>
 
 <style lang="scss">
-.tag{
-  display: inline-block;
-  padding:3px 6px;
-  font-size: 12px;
-  color: #fff;
-  background: red;
-  border-radius: 10px;
-  line-height:1;
-  font-style:normal;
-  position: relative;
-  left: 5px;
-  top: -5px;
-}
 </style>

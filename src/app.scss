@@ -52,6 +52,9 @@ input:focus{
 .w{
   width:100%;
 }
+.h{
+  height:100%;
+}
 .v-m{
   vertical-align:middle;
 }
@@ -112,6 +115,9 @@ input:focus{
 .ml-10{
   margin-left:10px;
 }
+.pd-10{
+  padding:10px;
+}
 .lh-20{
   line-height:2;
 }
@@ -123,8 +129,17 @@ input:focus{
   display:flex;
   flex-direction:row;
 }
+.align-center{
+  align-items: center;
+}
 .flex-1{
   flex:1;
+}
+.flex-2{
+  flex:2;
+}
+.flex-3{
+  flex:3;
 }
 .middle:before{
   content:"";
@@ -138,11 +153,11 @@ input:focus{
   margin-left:auto;
   margin-right:auto;
 }
+
 .main{
-  min-height:800px;
+  flex:1;
   background:#fff;
-  margin-top:20px;
-  margin-bottom:20px;
+  overflow:auto;
   padding:0 20px 20px 20px;
   box-sizing:border-box;
   position:relative;
@@ -154,8 +169,8 @@ input:focus{
 }
 
 .header{
-  position: relative;
   background:#324157;
+  position:relative;
   a{
     display: inline-block;
     padding:0 20px;
@@ -254,8 +269,15 @@ input:focus{
   &:focus{
     outline:none;
   }
+  &.new{
+    border:0;
+    background:transparent;
+    margin:0;
+  }
 }
-
+.relative{
+  position: relative;
+}
 .round{
   display:inline-block;
   vertical-align:middle;
@@ -273,6 +295,20 @@ input:focus{
   img{
     width:100%;
   }
+}
+
+.tag{
+  display: inline-block;
+  padding:4px 6px;
+  font-size: 12px;
+  color: #fff;
+  background: #F55250;
+  border-radius: 10px;
+  line-height:1;
+  font-style:normal;
+  position: relative;
+  left: 5px;
+  top: -5px;
 }
 
 .tabs{
@@ -319,11 +355,13 @@ input:focus{
 .member-list{
   display:flex;
   flex-direction:row;
+  flex-wrap:wrap;
   align-items:top;
   margin:20px 0;
   li{
     flex-basis:25%;
     text-align:center;
+    padding:5px 0;
   }
 }
 

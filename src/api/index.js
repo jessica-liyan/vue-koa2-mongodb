@@ -69,8 +69,8 @@ export function fetchUser(id, token){
 }
 
 // 用户列表
-export function fetchUserList(id){
-  return getData(`${base}/user/list`)
+export function fetchUserList(token){
+  return getDataWithToken(`${base}/user/list`, token)
 }
 
 // 更新用户资料
@@ -213,4 +213,14 @@ export function createGroup(data, token){
 // 群组信息
 export function getGroupInfo(id, token){
   return getDataWithToken(`${base}/group/${id}`, token)
+}
+
+// 申请加群
+export function joinGroup(id, token){
+  return getDataWithToken(`${base}/group/join/${id}`, token)
+}
+
+// 退群
+export function leaveGroup(id, token){
+  return getDataWithToken(`${base}/group/leave/${id}`, token)
 }

@@ -11,7 +11,7 @@
             <el-button size="mini" type="success" icon="el-icon-check" v-if="!isMyArticle && isFollowed" @click="unfollow(article.author._id)">已关注</el-button>
           </p>
           <p class="fs-12 c-9">
-            <i>{{new Date(article.created_at).toLocaleString()}}</i>
+            <i>{{article.created_at | getDateTime()}}</i>
             <i>阅读 {{article.viewsCount}}</i>
             <i>评论 {{article.commentsCount}}</i>
             <i>喜欢 {{article.collectionCount}}</i>

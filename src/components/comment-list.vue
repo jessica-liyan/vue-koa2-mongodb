@@ -8,7 +8,7 @@
             <a :href="`#/info/user/${item.user._id}`"  class="fs-16 c-3" target="_blank">{{item.user.name}}</a>
             <p class="fs-14 c-6">{{item.content}}</p>
             <div>
-              <span class="v-m mr-10 fs-12">{{new Date(item.created_at).toLocaleString()}}</span>
+              <span class="v-m mr-10 fs-12">{{item.created_at | getDateTime()}}</span>
               <a href="javascript:;" class="reply" ref="reply" v-on:click="showComment(index)">
                 <img src="../assets/comment.png" alt="">
                 <span class="v-m">
@@ -24,7 +24,7 @@
                         <a :href="`#/info/user/${child.user._id}`" target="_blank"><span class="c-blue">{{child.user.name}}:</span></a>
                         <span class="ml-10" v-html="child.content"></span></p>
                         <p>
-                          <span class="v-m mr-10 fs-12">{{new Date(child.created_at).toLocaleString()}}</span>
+                          <span class="v-m mr-10 fs-12">{{child.created_at | getDateTime()}}</span>
                           <a href="javascript:;" class="reply" v-on:click="showSubComment(index, child.user)"><img src="../assets/comment.png" alt=""><span class="v-m">回复</span></a>
                         </p>
                       </div>

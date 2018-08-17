@@ -10,6 +10,9 @@ import VueLocalStorage from 'vue-localstorage'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import store from './store'
+import getDateTime from './utils/getDateTime'
+
+Vue.filter('getDateTime', getDateTime)
 
 Vue.use(VueRouter)
 Vue.use(ElementUI)
