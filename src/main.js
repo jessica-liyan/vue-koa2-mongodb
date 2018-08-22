@@ -11,6 +11,7 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import store from './store'
 import getDateTime from './utils/getDateTime'
+import BaiduMap from 'vue-baidu-map'
 
 Vue.filter('getDateTime', getDateTime)
 
@@ -23,6 +24,10 @@ Vue.use(VueLocalStorage, {
 })
 Vue.use(mavonEditor)
 Vue.use(VueSocketio, socketio('http://192.168.4.76:4000'), store);
+Vue.use(BaiduMap, {
+  /* Visit http://lbsyun.baidu.com/apiconsole/key for details about app key. */
+  ak: 'YOUR_APP_KEY'
+})
 
 new Vue({
   router,

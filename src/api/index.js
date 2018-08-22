@@ -224,3 +224,8 @@ export function joinGroup(id, token){
 export function leaveGroup(id, token){
   return getDataWithToken(`${base}/group/leave/${id}`, token)
 }
+
+// 下载
+export function downloadFile(name){
+  return getData(`${base}/download/${name}`)
+}

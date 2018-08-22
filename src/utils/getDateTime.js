@@ -15,11 +15,11 @@ export default function getDateTime(dataStr) {
           return minute + "分钟前";
       }
     }else {
-      return moment(dataStr).format('HH:mm:ss')
+      return moment(dataStr).format('HH:mm')
     }
   }
   if(isYestoday(date)){ // 昨天
-    return "昨天 " + moment(dataStr).format('HH:mm:ss')
+    return "昨天 " + moment(dataStr).format('HH:mm')
   }
   if(isThisWeek(date)){ // 本周
     let weekday;
@@ -44,12 +44,12 @@ export default function getDateTime(dataStr) {
     if (date.getDay() == 0) {
         weekday = "周日";
     }
-    return weekday + " " + moment(dataStr).format('HH:mm:ss')
+    return weekday + " " + moment(dataStr).format('HH:mm')
   }
   if(isThisYear(date)){ // 本年
-    return moment(dataStr).format('MM-DD HH:mm:ss')
+    return moment(dataStr).format('MM-DD HH:mm')
   }
-  return moment(dataStr).format('YYYY-MM-DD HH:mm:ss')
+  return moment(dataStr).format('YYYY-MM-DD HH:mm')
 }
 
 function isToday (date) {

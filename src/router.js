@@ -1,23 +1,4 @@
 import VueRouter from 'vue-router'
-import Login from './components/login.vue'
-import Register from './components/register.vue'
-import Forgot from './components/forgot.vue'
-import Info from './components/info.vue'
-import Home from './components/home.vue'
-import Post from './components/post.vue'
-import User from './components/user.vue'
-import Editor from './components/editor.vue'
-import PostDetail from './components/post-detail.vue'
-import UserActs from './components/user-activities.vue'
-import UserPosts from './components/user-posts.vue'
-import UserLikes from './components/user-likes.vue'
-import UserFollowees from './components/user-followees.vue'
-import UserFollowers from './components/user-followers.vue'
-import Profile from './components/profile.vue'
-import Notification from './components/notification.vue'
-import Message from './components/message.vue'
-
-import store from './store'
 
 const router = new VueRouter({
   linkActiveClass: 'active',
@@ -29,73 +10,73 @@ const router = new VueRouter({
     { 
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import('./components/login.vue')
     },
     { 
       path: '/register',
       name: 'register',
-      component: Register
+      component: () => import('./components/register.vue')
     },
     { 
       path: '/forgot',
-      component: Forgot
+      component: () => import('./components/forgot.vue')
     },
     { 
       path: '/info',
-      component: Info,
+      component: () => import('./components/info.vue'),
       redirect: '/info/home',
       children: [{
         path: 'home',
         name: 'home',
-        component: Home,
+        component: () => import('./components/home.vue'),
       }, {
         path: 'post',
-        component: Post,
+        component: () => import('./components/post.vue'),
       }, {
         path: 'post/:id',
-        component: PostDetail,
+        component: () => import('./components/post-detail.vue'),
       }, {
         path: 'user/:id',
         redirect: 'user/:id/activities',
-        component: User,
+        component: () => import('./components/user.vue'),
         children: [{
           path: 'activities',
-          component: UserActs,
+          component: () => import('./components/user-activities.vue'),
         }, {
           path: 'posts',
-          component: UserPosts,
+          component: () => import('./components/user-posts.vue'),
         }, {
           path: 'likes',
-          component: UserLikes,
+          component: () => import('./components/user-likes.vue'),
         }, {
           path: 'followees',
-          component: UserFollowees,
+          component: () => import('./components/user-followees.vue'),
         }, {
           path: 'followers',
-          component: UserFollowers,
+          component: () => import('./components/user-followers.vue'),
         }]
       }, {
         path: 'user/setting/profile',
-        component: Profile,
+        component: () => import('./components/profile.vue'),
       }, {
         path: 'editor',
-        component: Editor,
+        component: () => import('./components/editor.vue'),
       }, {
         path: 'editor/:id',
-        component: Editor,
+        component: () => import('./components/editor.vue'),
       }, {
         path: 'notification',
-        component: Notification,
+        component: () => import('./components/notification.vue'),
       }, {
         path: 'message',
         redirect: 'message/text',
-        component: Message,
+        component: () => import('./components/message.vue'),
       }, {
         path: 'message/:type',
-        component: Message,
+        component: () => import('./components/message.vue'),
       }, {
         path: 'message/:type/:id',
-        component: Message,
+        component: () => import('./components/message.vue'),
       }]
     }
   ]

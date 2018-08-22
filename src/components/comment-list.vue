@@ -73,11 +73,6 @@ export default {
     this.token = this.$storage.get('token')
     this.getComments(this.id, this.token)
   },
-  props: {
-    data: {
-      type: Array
-    }
-  },
   methods: {
     ...mapMutations({
       getComments: 'getComments',

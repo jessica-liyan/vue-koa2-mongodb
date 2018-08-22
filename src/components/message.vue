@@ -63,6 +63,10 @@
             <el-form-item label="群组描述">
               <el-input v-model="group.desc" auto-complete="off"></el-input>
             </el-form-item>
+            <el-form-item label="群组地点">
+              <el-input v-model="group.location" auto-complete="off">
+              </el-input>
+            </el-form-item>
             <el-form-item label="群组成员">
               <el-transfer
                 filterable
@@ -113,7 +117,7 @@
             <el-upload :action="base + '/upload'" :on-success="handleImg" :show-file-list="false" class="mr-20">
               <el-button type="text"><img src="../assets/image.png" alt=""></el-button>
             </el-upload>
-            <emoji-picker @emoji="insert">
+            <emoji-picker @emoji="insert" class="mr-20">
               <div slot="emoji-invoker" slot-scope="{events}" v-on="events">
                 <el-button type="text" slot="reference"><img src="../assets/emoji.png" alt=""></el-button>
               </div>
@@ -125,6 +129,10 @@
                 </div> 
               </div>
             </emoji-picker>
+            <el-upload :action="base + '/upload'" :on-success="handleFile" :show-file-list="false" class="mr-20">
+              <el-button type="text"><img src="../assets/upload.png" alt=""></el-button>
+            </el-upload>
+            <el-button @click="mapVisible = true" type="text"><img src="../assets/location.png" alt=""></el-button>
           </div>
           <div contenteditable="true" class="textarea new" style="height:100px;overflow:auto;" ref="textarea">
           </div>
@@ -134,13 +142,15 @@
         </div>
       </div>
     </div>
+    <AutoLocation :visible="mapVisible" @success="sendLocationSuccess" @close="close"></AutoLocation>
   </div>
 </template>
 
 <script>
-import {base, sendMessage, fetchUser, getMessageList, getMessageFriends, fetchUserList, getGroupList, createGroup, getGroupInfo, joinGroup, leaveGroup} from '../api/index.js'
+import {base, sendMessage, fetchUser, getMessageList, getMessageFriends, fetchUserList, getGroupList, createGroup, getGroupInfo, joinGroup, leaveGroup, downloadFile} from '../api/index.js'
 import {mapState} from 'vuex'
 import EmojiPicker from 'vue-emoji-picker'
+import AutoLocation from './autolocation'
 
 export default {
   name: 'message',
@@ -154,12 +164,14 @@ export default {
       group: { // 添加群
         name: '',
         desc: '',
-        members: []
+        members: [],
+        location: ''
       }, 
       content: '',
       to: '',  // 好友id/群id
       toInfo: {}, // 当前好友/群信息 
       type: 'text',  // 聊天类型  text/group
+      mapVisible: false,
       visible: false,
       joinVisible: false,
       joinReason: '',
@@ -169,7 +181,8 @@ export default {
     }
   },
   components: {
-    EmojiPicker
+    EmojiPicker,
+    AutoLocation
   },
   sockets:{
     connect: function(){
@@ -244,8 +257,36 @@ export default {
     },
     // 发送图片
     handleImg (res, file) {
-      var src = `${base}/${res.data.path}`
+      let src = `${base}/${res.data.path}`
       this.$refs.textarea.innerHTML += '<img src='+src+'>'
+    },
+    // 发送文件
+    handleFile (res, file) {
+      console.log('上传了', res, file)
+      let href = `${base}/${res.data.path}`
+      let filename = file.name
+      let type
+      switch (res.data.ext) {
+        case 'docx': type = 'word';break;
+        case 'txt': type = 'txt';break;
+        case 'pdf': type = 'pdf';break;
+        case 'pptx': type = 'ppt';break;
+        case 'xlsx': type = 'excel';break;
+        case 'png': case 'jpg': case 'jpeg': case 'webp': type = 'img';break;
+        default: type = 'file';break;
+      }
+
+      this.$refs.textarea.innerHTML += `<a href='${href}' download class="download"><img src=${require(`../assets/${type}.png`)}><span class="v-m ml-10 fs-14 c-3">${filename}</span></a>`
+    },
+    // 发送定位成功
+    sendLocationSuccess (data) {
+      console.log('发送定位', data)
+      let href = `http://api.map.baidu.com/marker?location=${data.point.lat},${data.point.lng}&title=我的位置&content=奎科大厦&output=html`
+      this.$refs.textarea.innerHTML += `<a href='${href}' target="_blank" class="download"><span class="fs-14 c-3">${data.addressComponent.province} ${data.addressComponent.city}</span></a>`
+    },
+    // 发送定位弹窗关闭
+    close () {
+      this.mapVisible = false
     },
     isNotIn (group) {
       return group.members.findIndex(m => m._id === this.id) === -1
@@ -258,7 +299,6 @@ export default {
         })
       }else{
         getGroupInfo(this.to, this.token).then(res => {
-          console.log('这个群信息', res)
           this.toInfo = res.data.data
         })
       }
@@ -354,9 +394,7 @@ export default {
     },
     // 退群
     leave () {
-      console.log(this.toInfo._id)
       leaveGroup(this.toInfo._id, this.token).then(res => {
-        console.log(res)
         if (res.data.status === 0) {
           this.$message({
             type: 'error',
@@ -386,7 +424,8 @@ export default {
       if(this.type === 'text'){
         this.messages.push({
           from: this.user,
-          content: this.content
+          content: this.content,
+          created_at: Date.now()
         })
       }
       // 更新好友列表最新消息
@@ -398,8 +437,10 @@ export default {
     },
     scrollToBottom () {
       this.$nextTick(() => {
-        var content = this.$refs.content
-        content.scrollTop = content.scrollHeight
+        var info = this.$refs.content
+        if(this.messages.length){
+          info.scrollTop = info.scrollHeight
+        }
       })
     }
   },
@@ -559,6 +600,14 @@ export default {
 }
 .chat-bottom{
   border-top:1px solid #ddd;
+}
+
+.download{
+  display:inline-block;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding:10px;
+  font-size:0;
 }
 
 .emoji-list{
